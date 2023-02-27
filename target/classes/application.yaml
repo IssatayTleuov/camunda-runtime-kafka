@@ -1,0 +1,13 @@
+spring.datasource.url: jdbc:h2:file:./camunda-h2-database
+
+camunda.bpm.admin-user:
+  id: demo
+  password: demo
+spring:
+  kafka:
+    bootstrap-servers: 172.25.43.101:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: com.example.workflow.serializer.HistoryEventSerializer
+server:
+  port: 8080
