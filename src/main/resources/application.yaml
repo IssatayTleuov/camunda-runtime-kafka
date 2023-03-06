@@ -11,3 +11,6 @@ spring:
       value-serializer: com.example.workflow.serializer.HistoryEventSerializer
 server:
   port: 8080
+logging:
+  level:
+    root: info
