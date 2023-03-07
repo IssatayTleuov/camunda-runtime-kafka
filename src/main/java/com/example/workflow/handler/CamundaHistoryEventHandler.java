@@ -7,11 +7,12 @@ import org.camunda.bpm.engine.impl.history.handler.HistoryEventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Component
 @Slf4j
+@Service
 public class CamundaHistoryEventHandler implements HistoryEventHandler {
     private final KafkaTemplate<String, HistoryEventDto> kafkaTemplate;
 
