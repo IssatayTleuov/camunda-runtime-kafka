@@ -1,37 +1,31 @@
 package com.example.workflow.handler;
 
 import com.example.workflow.dto.HistoryEventDto;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.impl.history.event.HistoryEvent;
 import org.camunda.bpm.engine.impl.history.handler.HistoryEventHandler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Slf4j
 @Service
-public class CamundaHistoryEventHandler implements HistoryEventHandler {
-    private final KafkaTemplate<String, HistoryEventDto> kafkaTemplate;
-
-    @Autowired
-    public CamundaHistoryEventHandler(KafkaTemplate<String, HistoryEventDto> kafkaTemplate) {
-        this.kafkaTemplate = kafkaTemplate;
-    }
+@RequiredArgsConstructor
+public class CamundaHistoryEventHandler<T> implements HistoryEventHandler {
+    private final KafkaTemplate<String, T> kafkaTemplate;
 
     @Override
     public void handleEvent(HistoryEvent historyEvent) {
-        HistoryEventDto historyEventDto = new HistoryEventDto(
-                historyEvent.getClass().getName(),
-                historyEvent
-        );
-
+        log.info("Send history data!");
         kafkaTemplate
-                .send(
-                        "camunda",
-                        historyEventDto
+                .sendDefault(
+                        historyEvent.getProcessInstanceId(),
+                        (T) new HistoryEventDto(
+                                historyEvent.getClass().getCanonicalName(),
+                                historyEvent
+                        )
                 );
     }
 
